@@ -650,11 +650,15 @@
   .clarify-hint{margin-top:8px;font-size:11px;line-height:1.45;color:var(--muted);}
   .clarify-card.visible .clarify-question{padding-left:1px;}
   /* Left rail (desktop primary navigation) */
-  .rail{display:none;width:48px;flex-shrink:0;flex-direction:column;align-items:center;gap:4px;padding:8px 0;background:var(--sidebar);border-right:1px solid var(--border);}
-  .rail-btn{width:36px;height:36px;border-radius:8px;border:none;background:none;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:color .15s,background .15s;flex-shrink:0;padding:0;}
+  .rail{display:none;width:100px;flex-shrink:0;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 6px;background:var(--sidebar);border-right:1px solid var(--border);}
+  .rail-btn{width:88px;height:32px;border-radius:6px;border:none;background:none;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:flex-start;gap:8px;position:relative;transition:color .15s,background .15s;flex-shrink:0;padding:0 10px;font-size:12px;}
+  .rail-btn svg{width:18px;height:18px;flex-shrink:0;}
+  .rail-btn-label{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .rail-btn:hover{color:var(--text);background:var(--hover-bg);}
   .rail-btn.active{color:var(--accent-text);background:var(--accent-bg);}
-.rail-btn.active::before{content:'';position:absolute;left:-6px;top:50%;transform:translateY(-50%);width:3px;height:16px;background:var(--accent);border-radius:0 2px 2px 0;}
+.rail-btn.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:16px;background:var(--accent);border-radius:0 2px 2px 0;}
+  /* Rail buttons show text labels, so hide tooltips */
+  .rail-btn.has-tooltip::after{content:none!important;display:none!important;}
   /* Custom tooltip — replaces native title="" for faster, more polished display.
      Native browser tooltips have a ~1.5s hover delay that reads as "no tooltip
      exists" (#1775). Our custom tooltip appears at ~150ms hover, dismisses
