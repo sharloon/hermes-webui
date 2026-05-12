@@ -98,6 +98,34 @@
   /* ── Skin: Charizard (orange) ── */
   :root[data-skin="charizard"]{--accent:#EA580C;--accent-hover:#C2410C;--accent-bg:rgba(234,88,12,0.08);--accent-bg-strong:rgba(234,88,12,0.15);--accent-text:#C2410C;}
   :root.dark[data-skin="charizard"]{--accent:#FB923C;--accent-hover:#F97316;--accent-bg:rgba(251,146,60,0.08);--accent-bg-strong:rgba(251,146,60,0.15);--accent-text:#FB923C;}
+  /* ── Skin: Noir (pure black, gold accent) ──
+     Minimalist dark theme inspired by modern chat interfaces.
+     Pure black background, subtle borders, gold highlights. */
+  :root[data-skin="noir"]{--accent:#CCA300;--accent-hover:#B8860B;--accent-bg:rgba(204,163,0,0.08);--accent-bg-strong:rgba(204,163,0,0.15);--accent-text:#CCA300;}
+  :root.dark[data-skin="noir"]{
+    --bg:#000000;--sidebar:#0A0A0A;--border:#1A1A1A;--border2:#2A2A2A;
+    --text:#E5E5E5;--muted:#888888;--strong:#FFFFFF;--em:#AAAAAA;
+    --accent:#FFD700;--accent-hover:#CCA300;--accent-text:#FFD700;
+    --accent-bg:rgba(255,215,0,0.06);--accent-bg-strong:rgba(255,215,0,0.12);
+    --code-bg:#0F0F0F;--code-inline-bg:rgba(255,215,0,0.05);--code-text:#FFD700;--pre-text:#E5E5E5;
+    --surface:#0A0A0A;--topbar-bg:rgba(0,0,0,0.95);--main-bg:rgba(0,0,0,0.8);
+    --input-bg:rgba(255,255,255,0.03);--hover-bg:rgba(255,255,255,0.05);
+    --focus-ring:rgba(255,215,0,0.25);--focus-glow:rgba(255,215,0,0.08);
+    --blue:#4DD0E1;--gold:#FFD700;
+  }
+  :root.dark[data-skin="noir"] .rail{background:#0A0A0A;border-right-color:#1A1A1A;}
+  :root.dark[data-skin="noir"] .rail-btn{color:#888888;}
+  :root.dark[data-skin="noir"] .rail-btn:hover{color:#E5E5E5;background:rgba(255,255,255,0.05);}
+  :root.dark[data-skin="noir"] .rail-btn.active{color:#FFD700;background:rgba(255,215,0,0.08);}
+  :root.dark[data-skin="noir"] .sidebar{background:#0A0A0A;border-right-color:#1A1A1A;}
+  :root.dark[data-skin="noir"] .session-item{border-left-color:#1A1A1A;}
+  :root.dark[data-skin="noir"] .session-item:hover{background:rgba(255,255,255,0.03);}
+  :root.dark[data-skin="noir"] .session-item.active{border-left-color:#FFD700;background:rgba(255,215,0,0.06);}
+  :root.dark[data-skin="noir"] .msg-row[data-role="user"] .msg-body{background:rgba(255,215,0,0.08);border-color:rgba(255,215,0,0.15);}
+  :root.dark[data-skin="noir"] .composer-box{background:#0F0F0F;border-color:#1A1A1A;}
+  :root.dark[data-skin="noir"] .panel-head{border-bottom-color:#1A1A1A;}
+  :root.dark[data-skin="noir"] .tool-card{background:#0F0F0F;border-color:#1A1A1A;}
+  :root.dark[data-skin="noir"] .tool-card:hover{border-color:#2A2A2A;}
   /* ── Skin: Sienna (warm clay & sand earth palette) ──
      Full palette rewrite (not just --accent): warm off-white surface,
      soft sand sidebar, clay accent. Sets --user-bubble-* for the redesigned
@@ -292,7 +320,8 @@
   body{background:var(--bg);color:var(--text);height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;}
   .layout{display:flex;width:100%;flex:1 1 auto;min-height:0;}
   .app-titlebar{display:flex;align-items:center;justify-content:center;height:38px;flex-shrink:0;background:var(--sidebar);border-bottom:1px solid var(--border);padding:0 12px;padding-top:var(--app-titlebar-safe-top);padding-left:max(12px,env(safe-area-inset-left,0));padding-right:max(12px,env(safe-area-inset-right,0));box-sizing:content-box;font-size:12px;color:var(--muted);user-select:none;-webkit-app-region:drag;position:relative;z-index:20;}
-  .app-titlebar-inner{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%;justify-content:center;}
+.app-titlebar-rail-title{display:none;width:100px;padding-left:6px;font-size:14px;font-weight:700;color:var(--accent);text-align:center;}
+.app-titlebar-inner{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%;justify-content:center;}
   .system-health-panel.insights-card{display:flex;flex-direction:column;gap:12px;color:var(--muted);}
   .system-health-panel.unavailable{display:none;}
   .system-health-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
@@ -702,7 +731,7 @@
   .dashboard-external-badge{position:absolute;right:5px;top:5px;width:9px;height:9px;border-radius:2px;border:1px solid var(--accent);background:var(--sidebar);box-shadow:0 0 0 2px var(--sidebar);opacity:.95;}
   .dashboard-external-badge::after{content:'';position:absolute;right:-2px;top:-2px;width:5px;height:5px;border-top:1.5px solid var(--accent);border-right:1.5px solid var(--accent);}
   .sidebar-nav .dashboard-external-badge{right:8px;top:7px;width:8px;height:8px;}
-  @media(min-width:641px){.rail{display:flex;}.sidebar > .sidebar-nav{display:none;}}
+  @media(min-width:641px){.rail{display:flex;}.sidebar > .sidebar-nav{display:none;}.app-titlebar-rail-title{display:block;position:absolute;left:0;top:50%;transform:translateY(-50%);padding-left:6px;}}
   /* Sidebar navigation tabs */
   .sidebar-nav{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;padding:6px 8px 0;gap:2px;}
   .nav-tab{flex:1;padding:10px 4px 8px;font-size:20px;text-align:center;cursor:pointer;color:var(--muted);border:none;background:none;transition:color .15s;border-bottom:2px solid transparent;white-space:nowrap;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}

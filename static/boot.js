@@ -919,7 +919,7 @@ $('modelSelect').onchange=async()=>{
   if(typeof showToast==='function'){
     showToast(t('model_scope_toast')||'Applies to this conversation from your next message.', 3000);
   }
-  // Warn if selected model belongs to a different provider than what Hermes is configured for
+  // Warn if selected model belongs to a different provider than what OpsMax is configured for
   if(typeof _checkProviderMismatch==='function'){
     const warn=_checkProviderMismatch(selectedModel);
     if(warn&&typeof showToast==='function') showToast(warn,4000);
@@ -1153,6 +1153,67 @@ window.addEventListener('resize',()=>{
   };
 })();
 
+// ── Admin mode toggle ──────────────────────────────────────────────────────
+// Controls which menu items are visible: normal mode shows basic menus,
+// admin mode shows all menus including management tools.
+function _applyAdminMode(enabled){
+  const railBtns = document.querySelectorAll('.rail-btn[data-mode]');
+  const sidebarBtns = document.querySelectorAll('.sidebar-nav .nav-tab[data-mode]');
+  const panelViews = document.querySelectorAll('.panel-view[data-mode]');
+
+  railBtns.forEach(btn => {
+    const mode = btn.dataset.mode;
+    if (mode === 'admin') {
+      btn.style.display = enabled ? '' : 'none';
+    } else {
+      btn.style.display = '';
+    }
+  });
+
+  sidebarBtns.forEach(btn => {
+    const mode = btn.dataset.mode;
+    if (mode === 'admin') {
+      btn.style.display = enabled ? '' : 'none';
+    } else {
+      btn.style.display = '';
+    }
+  });
+
+  panelViews.forEach(panel => {
+    const mode = panel.dataset.mode;
+    if (mode === 'admin') {
+      panel.style.display = enabled ? '' : 'none';
+    }
+  });
+
+  // Update checkbox
+  const checkbox = $('settingsAdminMode');
+  if (checkbox) checkbox.checked = enabled;
+
+  // Save to localStorage
+  localStorage.setItem('hermes-admin-mode', enabled ? '1' : '0');
+}
+
+function _initAdminMode(){
+  const enabled = localStorage.getItem('hermes-admin-mode') === '1';
+  _applyAdminMode(enabled);
+
+  // Bind checkbox change event
+  const checkbox = $('settingsAdminMode');
+  if (checkbox) {
+    checkbox.addEventListener('change', function() {
+      _applyAdminMode(this.checked);
+      // If current panel is admin-only and we're switching to normal mode, switch to chat
+      if (!this.checked) {
+        const activePanel = document.querySelector('.rail-btn.nav-tab.active');
+        if (activePanel && activePanel.dataset.mode === 'admin') {
+          switchPanel('chat');
+        }
+      }
+    });
+  }
+}
+
 // ── Appearance helpers (theme = light/dark/system, skin = accent color) ──────
 const _THEMES=[
   {name:'Light', value:'light', colors:['#FEFCF7','#FAF7F0','#B8860B']},
@@ -1168,6 +1229,7 @@ const _SKINS=[
   {name:'Sisyphus', colors:['#A78BFA','#8B5CF6','#7C3AED']},
   {name:'Charizard',colors:['#FB923C','#F97316','#EA580C']},
   {name:'Sienna',   colors:['#D97757','#C06A49','#9A523A']},
+  {name:'Noir',     colors:['#FFD700','#CCA300','#997A00']},
 ];
 const _VALID_THEMES=new Set((_THEMES||[]).map(t=>t.value));
 const _VALID_SKINS=new Set((_SKINS||[]).map(s=>s.name.toLowerCase()));
@@ -1349,12 +1411,12 @@ function _buildSkinPicker(activeSkin){
 function applyBotName(){
   // Prefer profile name over global bot_name for personalised placeholder.
   // If activeProfile is set and not 'default', use it (capitalised).
-  // Falls back to window._botName (global bot_name setting) or 'Hermes'.
+  // Falls back to window._botName (global bot_name setting) or 'OpsMax'.
   let name;
   if(S.activeProfile && S.activeProfile!=='default'){
     name=S.activeProfile.charAt(0).toUpperCase()+S.activeProfile.slice(1);
   }else{
-    name=window._botName||'Hermes';
+    name=window._botName||'OpsMax';
   }
   document.title=name;
   const sidebarH1=document.querySelector('.sidebar-header h1');
@@ -1384,7 +1446,7 @@ function applyBotName(){
     window._sidebarDensity=(s.sidebar_density==='detailed'?'detailed':'compact');
     window._busyInputMode=(s.busy_input_mode||'queue');
     window._sessionEndlessScrollEnabled=!!s.session_endless_scroll;
-    window._botName=s.bot_name||'Hermes';
+    window._botName=s.bot_name||'OpsMax';
     if(s.default_model) window._defaultModel=s.default_model;
     // Persist default workspace so the blank new-chat page can show it
     // and workspace actions (New file/folder) work before the first session (#804).
@@ -1408,6 +1470,8 @@ function applyBotName(){
     applyBotName();
     // TTS: apply enabled state on boot so buttons show/hide correctly (#499)
     if(typeof _applyTtsEnabled==='function') _applyTtsEnabled(localStorage.getItem('hermes-tts-enabled')==='true');
+    // Admin mode: apply menu visibility based on stored preference
+    _initAdminMode();
   }catch(e){
     window._sendKey='enter';
     window._showTokenUsage=false;
@@ -1421,7 +1485,7 @@ function applyBotName(){
     window._sidebarDensity='compact';
     window._busyInputMode='queue';
     window._sessionEndlessScrollEnabled=false;
-    window._botName='Hermes';
+    window._botName='OpsMax';
     _bootSettings={check_for_updates:false};
     if(typeof setLocale==='function'){
       const _lang=typeof resolvePreferredLocale==='function'
@@ -1432,6 +1496,7 @@ function applyBotName(){
     }
     applyBotName();
     if(typeof _applyTtsEnabled==='function') _applyTtsEnabled(localStorage.getItem('hermes-tts-enabled')==='true');
+    _initAdminMode();
   }
   // Non-blocking update check (fire-and-forget, once per tab session)
   // ?test_updates=1 in URL forces banner display for testing (bypasses sessionStorage guards)
